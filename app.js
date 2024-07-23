@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 
 
-app.use(["/items","/bids"] ,(req,res,next)=>{
+app.use(["/users","/friends"] ,(req,res,next)=>{
 	console.log("middleware execution")
 
 	let apiKey = req.query.apiKey
