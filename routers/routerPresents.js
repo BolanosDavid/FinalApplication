@@ -1,6 +1,4 @@
 const express = require('express')
-const activeApiKeys = require("../activeApiKeys")
-const jwt = require("jsonwebtoken");
 const database = require("../database")
 
 
@@ -127,6 +125,9 @@ routerPresents.put("/:id", async (req,res)=>{
     let url = req.body.url
     let price = req.body.price
 
+    if(id == undefined){
+        errors.push("no id in params")
+    }
     if ( name == undefined ){
         errors.push("no name in body")
     }
