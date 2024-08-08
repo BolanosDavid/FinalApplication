@@ -161,7 +161,25 @@ routerPresents.put("/:id", async (req,res)=>{
     database.disConnect();
     res.json({modifiyed: updatedItem})
 })
+routerPresents.get("", async(req,res) => {
+    let queryEmail = req.query.email
+    let apiEmail = req.infoInApiKey.email
+    
 
+    if(queryEmail != undefined){
+        database.connect()
+        let isFriend =await database.query('SELECT * FROM friends WHERE emailMainUser = ? AND emailFriend = ? ', [apiEmail,queryEmail])
+        if( isFriend.length < 1){
+            database.disConnect();
+            return res.status(400).json("Email in query does not have you in friends")
+        }else{
+            let userId = await database.query("SELECT users.userId FROM users WHERE email = ?",[queryEmail])
+            let presents = await database.query("SELECT * FROM presents WHERE userId = ?",[userId])
+            database.disConnect();
+            return res.json(presents);
+        }
+    }
+})
 
 
 module.exports = routerPresents
