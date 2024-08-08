@@ -1,14 +1,16 @@
 const express = require('express')
-
 const activeApiKeys = require("../activeApiKeys")
 const jwt = require("jsonwebtoken");
+const database = require("../database")
+
 
 let routerUsers = express.Router()
-
 
 routerUsers.post("/login", async (req,res) =>{
     let email = req.body.email
     let password = req.body.password
+    let errors = []
+
     if ( email == undefined ){
         errors.push("no email in body")
     }
