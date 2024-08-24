@@ -118,49 +118,81 @@ routerPresents.delete("/:id", async (req,res) => {
 })
 
 
-routerPresents.put("/:id", async (req,res)=>{
-    let id = req.params.id
-    let name = req.body.name
-    let description = req.body.description
-    let url = req.body.url
-    let price = req.body.price
-
-    if(id == undefined){
-        errors.push("no id in params")
-    }
-    if ( name == undefined ){
-        errors.push("no name in body")
-    }
-    if ( description == undefined ){
-        errors.push("no description in body")
-    }
-    if ( url == undefined ){
-        errors.push("no url in body")
-    }
-    if ( price == undefined ){
-        errors.push("no price in body")
-    }
-   
-    if ( errors.length > 0){
-        return res.status(400).json({error: errors})
+routerPresents.put("/:id", async (req, res) => {
+    let id = req.params.id;
+    if (!id) {
+        return res.status(400).json("No id in params");
     }
 
-    database.connect();
+    let name = req.body.name;
+    let description = req.body.description;
+    let url = req.body.url;
+    let price = req.body.price;
 
-    let updatedItem = null;
-    try {
-        updatedItem = await database.query(
-            'UPDATE items SET name = ?, description = ?, url = ?, price = ? WHERE id = ? AND idUser = ?', 
-            [name,description,url,price,id,req.infoInApiKey.id ])
+    // Si todos los campos del body son undefined, se asume que no es el dueño quien hace la petición
+    if (!name && !description && !url && !price) {
+        let friendEmail = req.infoInApiKey.email;
 
-    } catch (e){
-        database.disConnect();
-        return res.status(400).json({error: e})
+        try {
+            database.connect();
+            let ownersEmailResult = await database.query('SELECT users.email FROM presents JOIN users ON presents.userId = users.userId WHERE presents.id = ?', [id]);
+            if (ownersEmailResult.length < 1) {
+                return res.status(400).json("Present owner not found");
+            }
+            let ownersEmail = ownersEmailResult[0].email;
+            let isFriend = await database.query("SELECT * FROM friends WHERE emailMainUser = ? AND emailFriend = ?", [ownersEmail, friendEmail]);
+            if (isFriend.length < 1) {
+                return res.status(400).json("Not in friend list");
+            }
+
+            let chosenByResult = await database.query("SELECT chosenBy FROM presents WHERE id = ?", [id]);
+            if (chosenByResult.length < 1 || chosenByResult[0].chosenBy) {
+                return res.status(400).json("Present is already chosen by another friend");
+            }
+
+            if (friendEmail === ownersEmail) {
+                return res.status(400).json("Owner cannot give a present to himself");
+            }
+
+            let updatedPresent = await database.query('UPDATE presents SET chosenBy = ? WHERE id = ?', [friendEmail, id]);
+            return res.status(200).json({ modified: updatedPresent });
+
+        } catch (e) {
+            return res.status(500).json({ error: "Internal server error" });
+        } finally {
+            database.disConnect();
+        }
+
+    } else {
+        let errors = [];
+
+        if (!name) errors.push("no name in body");
+        if (!description) errors.push("no description in body");
+        if (!url) errors.push("no url in body");
+        if (!price) errors.push("no price in body");
+
+        if (errors.length > 0) {
+            return res.status(400).json({ error: errors });
+        }
+
+        try {
+            database.connect();
+
+            let updatedPresent = await database.query(
+                'UPDATE presents SET name = ?, description = ?, url = ?, price = ? WHERE id = ? AND userId = ?',
+                [name, description, url, price, id, req.infoInApiKey.id]
+            );
+
+            return res.status(200).json({ modified: updatedPresent });
+
+        } catch (e) {
+            return res.status(500).json({ error: "Internal server error" });
+        } finally {
+            database.disConnect();
+        }
     }
+});
 
-    database.disConnect();
-    res.json({modifiyed: updatedItem})
-})
 routerPresents.get("", async(req,res) => {
     let queryEmail = req.query.email
     let apiEmail = req.infoInApiKey.email

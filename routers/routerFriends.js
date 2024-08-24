@@ -1,7 +1,6 @@
 const express = require('express')
 
 const database = require("../database")
-const { route } = require('./routerFriends')
 
 
 let routerFriends = express.Router()
@@ -52,7 +51,7 @@ routerFriends.get("/", async (req, res) => {
 })
 
 
-routerFriends.delete("/:email", async(res, res) => {
+routerFriends.delete("/:email", async(req, res) => {
     let emailToDelete = req.params.email
 
     if ( emailToDelete == undefined){

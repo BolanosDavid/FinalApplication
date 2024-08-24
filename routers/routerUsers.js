@@ -25,7 +25,7 @@ routerUsers.post("/login", async (req,res) =>{
     database.connect();
     let selectedUsers = null;
     try {
-        selectedUsers = await database.query('SELECT id, email FROM users WHERE email = ? AND password = ?',
+        selectedUsers = await database.query('SELECT userId, email FROM users WHERE email = ? AND password = ?',
             [email, password])
     
     } catch (e){
