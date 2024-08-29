@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { backendURL } from '../Globals';
+import { useNavigate } from 'react-router-dom';
 let LoginUserComponent = () =>  {
     let [ email, setEmail ] = useState("");
     let [ password, setPassword ] = useState("");
     let [ message, setMessage ] = useState("");
-
+    let navigate = useNavigate()
     let changeEmail = (e) => {
         setEmail(e.currentTarget.value)
     }
@@ -22,10 +23,13 @@ let LoginUserComponent = () =>  {
         }) 
         if (response.ok){
             let jsonData = await response.json()
-
-            setMessage("Valid login")
+            localStorage.setItem("apiKey", jsonData.apiKey)
+            localStorage.setItem("email", jsonData.email)
+            localStorage.setItem("id", jsonData.id)
+            navigate("/presents/")
         }else{
-            setMessage("User not found")
+            let jsonData = await response.json()
+            setMessage(jsonData.error)
         }
         
     }
@@ -33,7 +37,7 @@ let LoginUserComponent = () =>  {
     return(
         <>
             <h2>Login</h2>
-            { message != "" && <h3 className='errorMessage'>{ message } </h3> }
+            { message !== "" && <h3 className='errorMessage'>{ message } </h3> }
             <div className="center-box">
                 <div className="from-group">
                     <input type="text" placeholder="Email:" onChange={changeEmail }/>
