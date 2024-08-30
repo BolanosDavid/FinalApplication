@@ -82,6 +82,10 @@ button:hover {
   text-align: center;
   color: red;
 }
+.errorForm{
+  color:red;
+  font-style:italic;
+}
 
 .name {
   text-align: center;
@@ -93,7 +97,6 @@ button:hover {
   margin-left:20px;
   margin-top: 20px;
   width: 30%;
-  height:fit-content;
   justify-content:center;
   text-align: center;
   
@@ -102,4 +105,22 @@ button:hover {
 .item-url:hover{
   background-color: lightblue;
 
+}
+.notification {
+  position: relative;
+  background-color: white;
+  border: 7px solid black;
+  color: lightgreen;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
 }

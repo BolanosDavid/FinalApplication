@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { backendURL } from '../Globals';
 import { useNavigate } from 'react-router-dom';
-let LoginUserComponent = () =>  {
+let LoginUserComponent = (props ) =>  {
+    let {createNotificacion, setLogin} = props
     let [ email, setEmail ] = useState("");
     let [ password, setPassword ] = useState("");
     let [ message, setMessage ] = useState("");
@@ -26,10 +27,22 @@ let LoginUserComponent = () =>  {
             localStorage.setItem("apiKey", jsonData.apiKey)
             localStorage.setItem("email", jsonData.email)
             localStorage.setItem("id", jsonData.id)
+            createNotificacion("Loged in")
+            setLogin(true)
             navigate("/presents/")
         }else{
             let jsonData = await response.json()
-            setMessage(jsonData.error)
+            if(Array.isArray(jsonData.error)){
+                let finalErrorMessage = ""
+                jsonData.error.forEach(element => {
+                    finalErrorMessage += element.error+ " "
+                });
+                setMessage(finalErrorMessage)
+                
+            }else{
+                setMessage(jsonData.error)
+            }
+            
         }
         
     }

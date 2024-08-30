@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate, useParams } from "react-router-dom";
 
-let EditPresentComponent = () => {
+let EditPresentComponent = (props) => {
+    let {createNotificacion} = props
     let [present, setPresent] = useState({})
     let [message,setMessage] = useState("")
     let { presentId } = useParams();
@@ -23,12 +24,12 @@ let EditPresentComponent = () => {
             body: JSON.stringify(present) 
         }) 
         if (response.ok){
-            let jsonData = await response.json()
+            createNotificacion("Present edited succesfully")
             navigate("/presents/")
         
         }else{
             let jsonData = await response.json()
-            setMessage(jsonData.error)
+            setMessage(jsonData)
         }
         
     }
@@ -37,6 +38,7 @@ let EditPresentComponent = () => {
     if (response.ok){
         let jsonData = await response.json()
         setPresent(jsonData)
+        
     }else{
         setMessage("Error")
     }
