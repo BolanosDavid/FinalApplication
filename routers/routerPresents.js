@@ -2,16 +2,17 @@ const express = require('express')
 const database = require("../database")
 
 
+
 let routerPresents = express.Router()
 
 routerPresents.post("/", async (req,res) => {
 
-    let userId = req.infoInApiKey.id
+    let userEmail = req.infoInApiKey.email
 
     let name = req.body.name
     let description = req.body.description
     let url = req.body.url
-    let price = parseDouble(req.body.price)
+    let price = parseFloat(req.body.price)
     let errors = []
 
     if( name == undefined ){
@@ -34,6 +35,8 @@ routerPresents.post("/", async (req,res) => {
     database.connect()
     let insertedPresent = null;
     try {
+        let user = await database.query("SELECT userId FROM users WHERE email = ?",[userEmail])
+        let userId = user[0].userId
         insertedPresent = await database.query(
             'INSERT INTO presents (userId,name,description,url,price) VALUES (?,?,?,?,?)',
             [userId, name,description,url,price])
@@ -49,22 +52,51 @@ routerPresents.post("/", async (req,res) => {
 })
 
 
-routerPresents.get("/", async (req,res) => {
-        let userEmail = req.infoInApiKey.email
-        
-        database.connect();
-        let userId = await database.query("SELECT userId FROM users WHERE email = ?", [userEmail])
-        let userPresents = await database.query('SELECT presents.* FROM presents WHERE presents.userId =  ?', [userId])
+routerPresents.get("/", async (req, res) => {
+    let userEmail = req.infoInApiKey.email;
+    let emailFriend = req.query.email
 
-        if (userPresents.length < 1){
+    if(emailFriend != undefined){
+        database.connect()
+        let isFriend = await database.query('SELECT * FROM friends WHERE emailMainUser = ? AND emailFriend = ? ', [userEmail,emailFriend])
+        if( isFriend.length < 1){
             database.disConnect();
-            return res.status(400).json({error: "No presents with this id"})
-        } else {
+            return res.status(400).json("You are not in friend list")
+        }else{
+            let userFriend = await database.query("SELECT users.userId FROM users WHERE email = ?",[emailFriend])
+            let userFrienduserId = userFriend[0]?.userId
+            let presents = await database.query("SELECT * FROM presents WHERE userId = ?",[userFrienduserId])
             database.disConnect();
-            return res.send(presents)
+            return res.json(presents);
         }
+    }else{
+        database.connect();
+
+    let userIdResult = await database.query("SELECT userId FROM users WHERE email = ?", [userEmail]);
+    
+    if (userIdResult.length < 1) {
+        database.disConnect();
+        return res.status(400).json({ error: "User not found" });
+    }
+
+    let userId = userIdResult[0].userId;
+
+    let userPresents = await database.query('SELECT * FROM presents WHERE userId = ?', [userId]);
+
+    database.disConnect();
+
+    if (userPresents.length < 1) {
+        return res.status(400).json({ error: "No presents found for this user" });
+    } else {
+        return res.json(userPresents);
+    }
+    }
+
+
+
     
 });
+
 routerPresents.get("/:id", async (req,res) => {
     let presentsId = req.params.id
     let userId = req.infoInApiKey.id
@@ -76,13 +108,14 @@ routerPresents.get("/:id", async (req,res) => {
     database.connect();
     
     let userPresents = await database.query('SELECT * FROM presents WHERE presents.id =  ?', [presentsId])
-    if(userPresents.userId == userId){
+    let userPresentsId = userPresents[0]?.userId
+    if( userPresentsId == userId){
         if (userPresents.length < 1){
             database.disConnect();
             return res.status(400).json({error: "No present with this id"})
         } else {
             database.disConnect();
-            return res.send(presents)
+            return res.send(userPresents[0])
         }
     }else{
         database.disConnect();
@@ -129,7 +162,6 @@ routerPresents.put("/:id", async (req, res) => {
     let url = req.body.url;
     let price = req.body.price;
 
-    // Si todos los campos del body son undefined, se asume que no es el dueño quien hace la petición
     if (!name && !description && !url && !price) {
         let friendEmail = req.infoInApiKey.email;
 
@@ -193,25 +225,7 @@ routerPresents.put("/:id", async (req, res) => {
     }
 });
 
-routerPresents.get("", async(req,res) => {
-    let queryEmail = req.query.email
-    let apiEmail = req.infoInApiKey.email
-    
 
-    if(queryEmail != undefined){
-        database.connect()
-        let isFriend =await database.query('SELECT * FROM friends WHERE emailMainUser = ? AND emailFriend = ? ', [apiEmail,queryEmail])
-        if( isFriend.length < 1){
-            database.disConnect();
-            return res.status(400).json("Email in query does not have you in friends")
-        }else{
-            let userId = await database.query("SELECT users.userId FROM users WHERE email = ?",[queryEmail])
-            let presents = await database.query("SELECT * FROM presents WHERE userId = ?",[userId])
-            database.disConnect();
-            return res.json(presents);
-        }
-    }
-})
 
 
 module.exports = routerPresents

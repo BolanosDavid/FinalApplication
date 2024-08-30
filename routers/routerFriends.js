@@ -33,17 +33,17 @@ routerFriends.post("/", async (req,res) => {
 
 })
 routerFriends.get("/", async (req, res) => {
-    let email = req.infoInApiKey.email
+    let userEmail = req.infoInApiKey.email;
 
     database.connect();
-    let friends = database.query("SELECT * FROM friends WHERE emailMainUser = ?", [email])
+    let friends =await database.query("SELECT emailFriend FROM friends WHERE emailMainUser = ?", [userEmail])
 
     if(friends.length < 1 ){
         database.disConnect();
         return res.status(400).json({error: "No friends found with this email"})
     }else{
         database.disConnect();
-        return friends;
+        return res.json(friends);
     }
 
 

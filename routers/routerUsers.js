@@ -42,12 +42,12 @@ routerUsers.post("/login", async (req,res) =>{
     let apiKey = jwt.sign(
         { 
             email: selectedUsers[0].email,
-            id: selectedUsers[0].id
+            id: selectedUsers[0].userId
         },"FraseSecretaIndescifrable");
     activeApiKeys.push(apiKey)
     res.json({
         apiKey: apiKey,
-        id: selectedUsers[0].id,
+        id: selectedUsers[0].userId,
         email: selectedUsers[0].email,
     })
 })
