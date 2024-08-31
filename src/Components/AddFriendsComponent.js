@@ -55,7 +55,7 @@ let AddFriendsComponent = (props) => {
                     <input type="text" placeholder="Email:" onChange={changeEmail }/>
                 </div>  
                 { error?.email && <p className='errorForm'>{error.email} </p>}
-                <button onClick={onClickAdd}>Añadir</button>                           
+                <button className="button_friends" onClick={onClickAdd}>Añadir</button>                           
             </div>
         </div>
     )

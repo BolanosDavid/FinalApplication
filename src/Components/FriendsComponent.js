@@ -50,7 +50,7 @@ let FriendsComponents = (props) => {
                 {friends.map(friend => (
                     <div className="item"> 
                         <p>{friend.emailFriend}</p>
-                        <button onClick={() => onClickDelete(friend.emailFriend)}> Delete</button>
+                        <button className="button_friends" onClick={() => onClickDelete(friend.emailFriend)}> Delete</button>
                     </div>
                 ))}
             </div>

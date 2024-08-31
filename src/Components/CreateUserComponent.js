@@ -62,7 +62,7 @@ let CreateUserComponent = (props) =>  {
                     <input type="password" placeholder="Password:" onChange={changePassword }/>
                 </div>
                 { error.password && <p className='errorForm'>{error.password} </p>}
-                <button onClick={onClickCreate}>Create Account</button>
+                <button className='button_friends' onClick={onClickCreate}>Create Account</button>
             </div>
         </>
     )

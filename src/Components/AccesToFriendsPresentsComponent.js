@@ -51,7 +51,7 @@ let AccesToFriendsPresentsComponent = (props) => {
             <div>
                 <div className="item"> 
                     <input type="text"placeholder="Friends email?" onChange={changeEmail} /> 
-                    <button onClick={() => onClickBuscar()}> Buscar</button>
+                    <button className="button_friends" onClick={() => onClickBuscar()}> Buscar</button>
                 </div>
                 
             </div>

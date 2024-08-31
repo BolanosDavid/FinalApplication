@@ -41,7 +41,6 @@ let disconnect =async  () => {
     <div className='main-container'>
         <nav>
           <ul className='navbar'>
-            {!login && <li><Link to= "/"> Index</Link></li>}
             { !login && <li><Link to= "/register"> Register</Link></li>}
             { !login && <li><Link to= "/login"> Login</Link></li>}
             {login && <li><Link to= "#" onClick={disconnect}> Disconnect</Link></li>}
@@ -60,11 +59,6 @@ let disconnect =async  () => {
         </div>
       )}
       <Routes>
-        <Route path='/' element={
-          <p>Hi</p>
-        }    />
-
-
       <Route path='/register' element={
           <CreateUserComponent createNotificacion={createNotificacion}   />
         }    />

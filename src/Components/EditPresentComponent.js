@@ -68,7 +68,7 @@ let EditPresentComponent = (props) => {
                 <div className="form-group"> 
                     <input type="number" placeholder="price"  value={present.price} onChange={e =>  changeProperty("price",e)} />
                 </div>
-                <button onClick={onClickEdit}>Edit</button>                           
+                <button className="button_friends" onClick={onClickEdit}>Edit</button>                           
             </div>
         </div>
     )

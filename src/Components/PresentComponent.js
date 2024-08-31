@@ -47,7 +47,7 @@ let PresentUserComponent  = (props) => {
     
     return (
         <div>
-            <h2> Presents </h2>
+            <h2> Tus regalos </h2>
             {message !== "" && <h3 className="errorMessage"> {message}</h3>}
             <div>
                 {presents.map(present => (

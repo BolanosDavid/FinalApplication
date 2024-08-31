@@ -58,7 +58,7 @@ let LoginUserComponent = (props ) =>  {
                 <div className="from-group">
                     <input type="password" placeholder="Password:" onChange={changePassword }/>
                 </div>
-                <button onClick={onClickLogin}>Accept</button>
+                <button className='button_friends' onClick={onClickLogin}>Accept</button>
             </div>
         </>
     )
