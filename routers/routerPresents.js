@@ -182,15 +182,11 @@ routerPresents.put("/:id", async (req, res) => {
                 return res.status(400).json("Present is already chosen by another friend");
             }
 
-            if (friendEmail === ownersEmail) {
-                return res.status(400).json("Owner cannot give a present to himself");
-            }
-
             let updatedPresent = await database.query('UPDATE presents SET chosenBy = ? WHERE id = ?', [friendEmail, id]);
             return res.status(200).json({ modified: updatedPresent });
 
         } catch (e) {
-            return res.status(500).json({ error: "Internal server error" });
+            return res.status(500).json("Internal server error" );
         } finally {
             database.disConnect();
         }

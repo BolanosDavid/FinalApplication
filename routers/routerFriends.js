@@ -13,21 +13,31 @@ routerFriends.post("/", async (req,res) => {
     if(friend_email == undefined){
         return( res.status(400).json("no email in body"))
     }
+    if(email == friend_email){
+        return ( res.status(400).json("You cant add yourself to friend list"))
+    }
 
     database.connect();
-    let insertedPresent = null;
+    let isFriend = await database.query('SELECT * FROM friends WHERE emailMainUser = ? AND emailFriend = ? ', [email,friend_email])
+    if (isFriend.length > 0){
+        return res.status(400).json("User is already in your friend list")
+    }
+    let insertedFriend = null;
     try {
-        insertedPresent = await database.query(
-            'INSERT INTO friends (emailMainUser,emailFriend) VALUES (?,?)',
-            [email,friend_email])
-
+        
+        
+            insertedFriend = await database.query(
+                'INSERT INTO friends (emailMainUser,emailFriend) VALUES (?,?)',[email,friend_email])
+        
     } catch (e){
         database.disConnect();
-        return res.status(400).json({error: e})
+        return res.status(400).json("Can not find a user with that email")
     }
 
     database.disConnect();
-    res.json({inserted: insertedPresent})
+    res.json({inserted: insertedFriend})
+    
+    
 
 
 
