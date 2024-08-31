@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate } from "react-router-dom";
+import { Button, Table } from "antd";
 
 let FriendsComponents = (props) => {
     let {createNotificacion,setLogin} = props
@@ -40,21 +41,22 @@ let FriendsComponents = (props) => {
             let jsonData = await response.json()
             setMessage(jsonData.error)
         }
-    }
-
+    }   
+    let columns = [
+        {
+            title: "Friend name",
+            dataIndex: "emailFriend"
+        },
+        {   
+            dataIndex: "emailFriend",
+            render: (emailFriend) => <Button title="Delete" onClick={() => onClickDelete(emailFriend)}>Delete</Button>
+        }
+    
+    ]
+    
     return (
-        <div>
-            <h2> Friends </h2>
-            {message !== "" && <h3 className="errorMessage"> {message}</h3>}
-            <div>
-                {friends.map(friend => (
-                    <div className="item"> 
-                        <p>{friend.emailFriend}</p>
-                        <button className="button_friends" onClick={() => onClickDelete(friend.emailFriend)}> Delete</button>
-                    </div>
-                ))}
-            </div>
-        </div>
+        <Table columns={columns} dataSource={friends} />
+
     );
 };
 

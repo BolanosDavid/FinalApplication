@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate } from "react-router-dom";
+import { Button,Card, Input } from 'antd';
 let AddFriendsComponent = (props) => {
     let {createNotificacion, setLogin} = props
     let [email, setEmail] = useState(null)
@@ -47,17 +48,11 @@ let AddFriendsComponent = (props) => {
         }
     }
     return (
-        <div>
-            <h2>Add friends</h2>
-            {message !== "" && <h3 className="errorMessage">{message}</h3>}
-            <div className="center-box"> 
-                <div className="form-group"> 
-                    <input type="text" placeholder="Email:" onChange={changeEmail }/>
-                </div>  
-                { error?.email && <p className='errorForm'>{error.email} </p>}
-                <button className="button_friends" onClick={onClickAdd}>Añadir</button>                           
-            </div>
-        </div>
+        <Card title="Add friends" style={{minWidth: '300px', maxWidth:'500px', textAlign:'center'}}>
+        <Input size='large' style={{marginBottom: '10px'}} type="text" placeholder='email' onChange={changeEmail } />
+        { error?.email && <p className='errorForm'>{error.email} </p>}
+        <Button type="primary" shape="round" onClick={onClickAdd} block>Añadir</Button>
+        </Card>
     )
 
 

@@ -1,4 +1,4 @@
-import './App.css';
+import 'antd/dist/reset.css'
 import { Route, Routes, Link, useNavigate} from 'react-router-dom'
 
 import CreateUserComponent from './Components/CreateUserComponent';
@@ -12,15 +12,19 @@ import FriendsComponents from './Components/FriendsComponent';
 import FriendsPresentsComponent from './Components/FriendsPresentsComponent';
 import AddFriendsComponent from './Components/AddFriendsComponent';
 import AccesToFriendsPresentsComponent from './Components/AccesToFriendsPresentsComponent';
+import { Layout, Menu, notification } from 'antd';
+import { Content, Footer, Header } from 'antd/es/layout/layout';
+
 function App() {
-  let [notificacion,setNotificacion] = useState("")
+  let [api,contextHolder] = notification.useNotification()
   let [login,setLogin] = useState(false)
   let navigate = useNavigate()  
-  let createNotificacion = (msg) => {
-    setNotificacion(msg)
-    setTimeout(() => {
-      setNotificacion("")
-    },3500)
+  let createNotificacion = (msg,type="info",placement="top") => {
+    api[type]({
+      message: msg,
+      description: msg,
+      placement: placement
+    })
 
   }
  useEffect( () => {
@@ -38,26 +42,31 @@ let disconnect =async  () => {
 }
 
   return (
-    <div className='main-container'>
-        <nav>
-          <ul className='navbar'>
-            { !login && <li><Link to= "/register"> Register</Link></li>}
-            { !login && <li><Link to= "/login"> Login</Link></li>}
-            {login && <li><Link to= "#" onClick={disconnect}> Disconnect</Link></li>}
-            { login && <li><Link to= "/presents"> Presents</Link></li>}
-            {login && <li><Link to= "/createPresents"> Create present</Link></li>}
-            {login && <li><Link to= "/friends"> Friends</Link></li>}
-            {login && <li><Link to= "/addFriends"> Add friends</Link></li>}
-            {login && <li><Link to= "/searchFriendPresents"> Search friends presents</Link></li>}
-          </ul>
-        </nav>
+    <>
+    {contextHolder}
+    <Layout className='layout' style={{minHeight: "100vh"}}> 
+      <Header>
+        {!login && (
+          <Menu theme="dark" mode='horizontal' items={[
+            {key:"menuRegister", label:<Link to= "/register"> Register</Link>},
+            {key:"menuLogin", label:<Link to= "/login"> Login</Link>}
+          ]}>
 
-      { notificacion !== "" && (
-        <div className='notification'>
-          {notificacion}
-          <span className='close-btn' onClick={() => setNotificacion("")}>X</span>
-        </div>
-      )}
+          </Menu>
+        )}
+        {login && (
+          <Menu theme="dark" mode='horizontal' items={[
+            {key:"menuDisconnect", label:<Link to= "#" onClick={disconnect}> Disconnect</Link>},
+            {key:"menuPresents", label:<Link to= "/presents"> Presents</Link>},
+            {key:"menuCreatePresent", label:<Link to= "/createPresents"> Create present</Link>},
+            {key:"menuFriends", label:<Link to= "/friends"> Friends</Link>},
+            {key:"menuAddFriends", label:<Link to= "/addFriends"> Add friends</Link>},
+            {key:"menuSearchFriends", label:<Link to= "/searchFriendPresents"> Search friends presents</Link>}
+          ]}></Menu>
+        )}
+        
+      </Header>
+    <Content style={{padding: '20px 50px'}}> 
       <Routes>
       <Route path='/register' element={
           <CreateUserComponent createNotificacion={createNotificacion}   />
@@ -89,9 +98,15 @@ let disconnect =async  () => {
       
         
       </Routes>
-        
-    </div>
+      </Content>
+    <Footer style={{textAlign:'center'}}>
+        my website
+    </Footer>  
+    </Layout>
+    </>
   );
+ 
+
 }
 
 export default App;

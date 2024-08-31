@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { Button,Card, Input,Alert } from "antd"
 let EditPresentComponent = (props) => {
     let {createNotificacion,setLogin} = props
     let [present, setPresent] = useState({})
@@ -49,29 +49,18 @@ let EditPresentComponent = (props) => {
     }
 }
     return (
-        <div>
-            <h2>Edit Present: {present.name}</h2>
-            {message !== "" && <h3 className="errorMessage">{message}</h3>}
-            <div className="center-box"> 
-                <div className="form-group"> 
-                    <input type="text" placeholder="name:" value={present.name} onChange={e =>  changeProperty("name",e)} />
-                </div>  
-
-                <div className="form-group"> 
-                    <input type="text" placeholder="description" value={present.description } onChange={e =>  changeProperty("description",e)} />
-                </div>
-
-                <div className="form-group"> 
-                    <input type="text" placeholder="url" value={present.url} onChange={e =>  changeProperty("url",e)} />
-                </div>
-
-                <div className="form-group"> 
-                    <input type="number" placeholder="price"  value={present.price} onChange={e =>  changeProperty("price",e)} />
-                </div>
-                <button className="button_friends" onClick={onClickEdit}>Edit</button>                           
-            </div>
-        </div>
-    )
+        <Card title= {` Edit Present: ${present.name}`} style={{minWidth: '300px', maxWidth:'500px', textAlign:'center'}}>
+             {message != "" && <Alert message = {message} type="error"/>}
+            <Input size='large' style={{marginBottom: '10px'}} type="text" placeholder='name' value={present.name} onChange={e =>  changeProperty("name",e)} />
+            <Input size='large'style={{marginBottom: '10px'}} type="text" placeholder='description' value={present.description} onChange={e =>  changeProperty("description",e)} />
+            <Input size='large' style={{marginBottom: '10px'}} type="text" placeholder='url' value={present.url} onChange={e =>  changeProperty("url",e)} />
+            <Input size='large'style={{marginBottom: '10px'}} type="text" placeholder='price' value={present.price} onChange={e =>  changeProperty("price",e)} />
+            <Button type="primary" shape="round" onClick={onClickEdit} block>Edit</Button>
+        </Card>
+        
+    
+)
+   
 }
 
 export default EditPresentComponent;

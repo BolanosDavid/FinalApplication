@@ -1,6 +1,7 @@
 import {useEffect, useState } from 'react';
     import { backendURL } from '../Globals';
 import { useNavigate } from 'react-router-dom';
+import { Button,Card, Input, Typography, Alert } from 'antd';
 let CreateUserComponent = (props) => {
         let {createNotificacion,setLogin} = props
         let [ item,setItem] = useState({});
@@ -69,31 +70,21 @@ let CreateUserComponent = (props) => {
         
         }
         
-        return(
-            <>
-                <h2>Create new present </h2>
-                { message !== "" && <h1 className='errorMessage'> {message}</h1>} 
-                <div className="center-box">
-                    <div className="from-group">
-                        <input type="text" placeholder="name:" onChange={ e => changeProperty("name",e) }/>
-                    </div>
-                    { error.name && <p className='errorForm'>{error.name} </p>}
-                    <div className="from-group">
-                        <input type="text" placeholder="description:" onChange={e => changeProperty("description",e) }/>
-                    </div>
-                    { error.description && <p className='errorForm'>{error.description} </p>}
-                    <div className="from-group">
-                        <input type="text" placeholder="url:" onChange={e => changeProperty("url",e) }/>
-                    </div>
-                    { error.url && <p className='errorForm'>{error.url} </p>}
-                    <div className="from-group">
-                        <input type="number" placeholder="price:" onChange={e => changeProperty("price",e) }/>
-                    </div>
-                    { error.price && <p className='errorForm'>{error.price} </p>}
-                    
-                    <button onClick={onClickCreate}>Create Present</button>
-                </div>
-            </>
+        return(     
+         <Card title="Create new present" style={{width:'500px', textAlign:'center'}}>
+             {message != "" && <Alert message = {message} type="error"/>}
+            <Input size='large' style={{marginBottom: '10px'}} type="text" placeholder='name' onChange={ e => changeProperty("name",e) } />
+            { error.name && <Typography.Text type='danger'>{error.email} </Typography.Text>}
+            <Input size='large'style={{marginTop: '10px'}} type="text" placeholder='description' onChange={e => changeProperty("description",e) } />
+            { error.description && <Typography.Text type='danger' >{error.password} </Typography.Text>}
+            <Input size='large'style={{marginTop: '10px'}} type="text" placeholder='url' onChange={e => changeProperty("url",e) } />
+            { error.url && <Typography.Text type='danger' >{error.password} </Typography.Text>}
+            <Input size='large'style={{marginTop: '10px'}} type="text" placeholder='price' onChange={e => changeProperty("price",e) } />
+            { error.price && <Typography.Text type='danger' >{error.password} </Typography.Text>}
+            
+            <Button style={{marginTop:"10px"}} type="primary" shape="round" onClick={onClickCreate} block>Crear</Button>
+        </Card>
+        
         )
     
     }

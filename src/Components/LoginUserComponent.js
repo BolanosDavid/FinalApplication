@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { backendURL } from '../Globals';
 import { useNavigate } from 'react-router-dom';
+import { Button,Card, Input, Typography } from 'antd';
 let LoginUserComponent = (props ) =>  {
     let {createNotificacion, setLogin} = props
     let [ email, setEmail ] = useState("");
@@ -48,19 +49,13 @@ let LoginUserComponent = (props ) =>  {
     }
     
     return(
-        <>
-            <h2>Login</h2>
+        <Card title="Login" style={{minWidth: '300px', maxWidth:'500px', textAlign:'center'}}>
+            { message != "" && <Typography.Text type="danger">{message}</Typography.Text>}
+            <Input size='large' style={{marginBottom: '10px'}} type="text" placeholder='email' onChange={changeEmail } />
+            <Input size='large'style={{marginBottom: '10px'}} type="password" placeholder='password' onChange={changePassword } />
             { message !== "" && <h3 className='errorMessage'>{ message } </h3> }
-            <div className="center-box">
-                <div className="from-group">
-                    <input type="text" placeholder="Email:" onChange={changeEmail }/>
-                </div>
-                <div className="from-group">
-                    <input type="password" placeholder="Password:" onChange={changePassword }/>
-                </div>
-                <button className='button_friends' onClick={onClickLogin}>Accept</button>
-            </div>
-        </>
+            <Button type="primary" shape="round" onClick={onClickLogin} block>Login</Button>
+        </Card>
     )
 
 }

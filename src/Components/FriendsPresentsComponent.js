@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate, useParams,Link } from "react-router-dom";
+import { Button,Card, List } from 'antd';
 let FriendsPresentsComponent =  (props) =>{
     let {createNotificacion,setLogin} = props
     let [message, setMessage] = useState("");
@@ -44,24 +45,36 @@ let FriendsPresentsComponent =  (props) =>{
             setMessage(jsonData)
         }
     }
-    
+     
     return(
-        <div>
-        <h2> {emailFriend} presents </h2>
-        {message !== "" && <h3 className="errorMessage"> {message}</h3>}
-        <div>
-            {friendPresents.map(friendPresent => (
-                <div className="item" key={friendPresent.id}> 
-                    <p className="name"> {friendPresent.name} </p>
-                    <p className="description"> {friendPresent.description} </p>
-                    <Link to={friendPresent.url} >{friendPresent.url}</Link>
-                    <p className="price"> {friendPresent.price}€ </p>
-                    <p> {friendPresent.chosenBy} </p>
-                    <button onClick={() => onClickRegalar(friendPresent)}>Regalar</button>
-                </div>
-            ))}
-        </div>
-    </div>
+        <>  
+            <Card title= {`${emailFriend} presents`}> </Card>
+            <List 
+            
+                grid={{
+                    gutter: 10,
+                    xs:1,
+                    md:2,
+                    xl:4
+                }}
+                dataSource={friendPresents}
+                renderItem={(present) => (
+                    <List.Item>
+                        <Card hoverable title={present.name} style={{width:"300px"}}>
+                            <p>Description: {present.description}</p>
+                            <p>
+                                URL: <Link to={present.url}>{present.url}</Link>
+                            </p>
+                            <p>Price: {present.price}€</p>
+                            <p>Chosen by: {present.chosenBy}</p>
+                            <Button type="primary" shape="round" onClick={() => onClickRegalar(present)} block>Regalar</Button>
+                            
+                        </Card>
+                    </List.Item>
+                )}
+            />
+        
+        </>
     )
 }
 

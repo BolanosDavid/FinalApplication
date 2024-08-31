@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { backendURL } from "../Globals"
 import { useNavigate, Link } from "react-router-dom"
+import { Button,Card, Descriptions, List } from "antd"
 
 let PresentUserComponent  = (props) => {
     let {createNotificacion, setLogin} = props
@@ -46,24 +47,34 @@ let PresentUserComponent  = (props) => {
     }
     
     return (
-        <div>
-            <h2> Tus regalos </h2>
-            {message !== "" && <h3 className="errorMessage"> {message}</h3>}
-            <div>
-                {presents.map(present => (
-                    <div className="item" key={present.id}> 
-                        <p className="name"> {present.name} </p>
-                        <p className="description"> {present.description} </p>
-                        <Link to={present.url} >{present.url}</Link>
-                        <p className="price"> {present.price}€ </p>
-                        <p> {present.chosenBy} </p>
-                        <button onClick={() => deletePresent(present.id)}> Delete</button>
-                        <button onClick={() => {editPresent(present.id)}}> Edit</button>
-                    </div>
-                ))}
-            </div>
-        </div>
-    )
-}
+        <>
+            <Card title="Tus regalos"> </Card>
+            <List
+                grid={{
+                    gutter: 10,
+                    xs:1,
+                    md:2,
+                    xl:4
+                }}
+                dataSource={presents}
+                renderItem={(present) => (
+                    <List.Item>
+                        <Card hoverable title={present.name} style={{width:"300px"}}>
+                            <p>Description: {present.description}</p>
+                            <p>
+                                URL: <Link to={present.url}>{present.url}</Link>
+                            </p>
+                            <p>Price: {present.price}€</p>
+                            <p>Chosen by: {present.chosenBy}</p>
+                            <Button type="primary" shape="round" onClick={() => deletePresent(present.id)} block>Delete</Button>
+                            <Button style={{ marginTop: '5px' }}type="primary" shape="round" onClick={() => editPresent(present.id)} block>Edit</Button>
+                        </Card>
+                    </List.Item>
+                )}
+            />
 
-export default PresentUserComponent
+        </>
+    );
+};
+
+export default PresentUserComponent;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { backendURL } from "../Globals";
+import { Button,Card, Input } from 'antd';
 let AccesToFriendsPresentsComponent = (props) => {
     let {createNotificacion, setLogin} = props
     let [email,setEmail] = useState("")
@@ -45,17 +46,11 @@ let AccesToFriendsPresentsComponent = (props) => {
     };
 
     return (
-        <div>
-            <h2> Friends </h2>
-            {message !== "" && <h3 className="errorMessage"> {message}</h3>}
-            <div>
-                <div className="item"> 
-                    <input type="text"placeholder="Friends email?" onChange={changeEmail} /> 
-                    <button className="button_friends" onClick={() => onClickBuscar()}> Buscar</button>
-                </div>
-                
-            </div>
-        </div>
+        <Card title="Friends presents" style={{minWidth: '300px', maxWidth:'500px', textAlign:'center'}}>
+        <Input size='large' style={{marginBottom: '10px'}} type="text" placeholder='friends email?' onChange={changeEmail } />
+        <Button type="primary" shape="round" onClick={() => onClickBuscar()} block>Buscar</Button>
+        </Card>
+            
     );
 }
 export default AccesToFriendsPresentsComponent
