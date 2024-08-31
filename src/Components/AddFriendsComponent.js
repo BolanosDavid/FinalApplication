@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate } from "react-router-dom";
 let AddFriendsComponent = (props) => {
-    let {createNotificacion} = props
+    let {createNotificacion, setLogin} = props
     let [email, setEmail] = useState(null)
     let [message,setMessage] = useState("")
     let [error, setError] = useState({})
@@ -32,6 +32,12 @@ let AddFriendsComponent = (props) => {
                 email: email,
                 }) 
         }) 
+        if (response.status === 401){
+            createNotificacion("You need to log in first")
+            setLogin(false)
+            navigate("/login")
+
+        }
         if (response.ok){
             console.log(createNotificacion("Friend added succesfully"))
             navigate("/friends")

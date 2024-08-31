@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate, useParams,Link } from "react-router-dom";
 let FriendsPresentsComponent =  (props) =>{
-    let {createNotificacion} = props
+    let {createNotificacion,setLogin} = props
     let [message, setMessage] = useState("");
     let [friendPresents, setFriendPresents] = useState([]); 
     let { emailFriend } = useParams()
@@ -15,6 +15,7 @@ let FriendsPresentsComponent =  (props) =>{
         if(response.status === 401){
             navigate("/login")
             createNotificacion("You need to be loged in")
+            setLogin(false)
             return
         }
         if (response.ok) {
@@ -27,8 +28,21 @@ let FriendsPresentsComponent =  (props) =>{
         }
     };
 
-    let onClickRegalar = () => {
+    let onClickRegalar = async (friendPresent) => {
 
+        let response = await fetch(backendURL+"/presents/"+friendPresent.id+"?apiKey="+localStorage.getItem("apiKey"), { 
+            method:'PUT',
+            headers:{"Content-Type": "application/json"},
+            body: JSON.stringify({friendPresent})
+        }) 
+        if (response.ok){
+            createNotificacion("Present chosen succesfully")
+            navigate("/friends/")
+        
+        }else{
+            let jsonData = await response.json()
+            setMessage(jsonData)
+        }
     }
     
     return(
@@ -43,7 +57,7 @@ let FriendsPresentsComponent =  (props) =>{
                     <Link to={friendPresent.url} >{friendPresent.url}</Link>
                     <p className="price"> {friendPresent.price}€ </p>
                     <p> {friendPresent.chosenBy} </p>
-                    <button onClick={onClickRegalar}> Regalar</button>
+                    <button onClick={() => onClickRegalar(friendPresent)}>Regalar</button>
                 </div>
             ))}
         </div>

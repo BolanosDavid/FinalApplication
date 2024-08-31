@@ -3,7 +3,7 @@ import { backendURL } from "../Globals"
 import { useNavigate, Link } from "react-router-dom"
 
 let PresentUserComponent  = (props) => {
-    let {createNotificacion} = props
+    let {createNotificacion, setLogin} = props
     let [presents, setPresents] = useState([])
     let [message, setMessage] = useState("")
     let navigate = useNavigate()
@@ -15,6 +15,7 @@ let PresentUserComponent  = (props) => {
         let response = await fetch(backendURL + "/presents?apiKey=" + localStorage.getItem("apiKey"))
         if(response.status === 401){
             navigate("/login")
+            setLogin(false)
             createNotificacion("You need to be loged in")
             return
         }

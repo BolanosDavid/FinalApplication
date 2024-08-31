@@ -3,7 +3,7 @@ import { backendURL } from "../Globals";
 import { useNavigate, useParams } from "react-router-dom";
 
 let EditPresentComponent = (props) => {
-    let {createNotificacion} = props
+    let {createNotificacion,setLogin} = props
     let [present, setPresent] = useState({})
     let [message,setMessage] = useState("")
     let { presentId } = useParams();
@@ -35,6 +35,11 @@ let EditPresentComponent = (props) => {
     }
   let getPresent = async () => {
     let response = await fetch(backendURL+"/presents/"+presentId+"/?apiKey="+localStorage.getItem("apiKey"))
+    if(response.status === 401){
+        navigate("/login")
+        createNotificacion("You need to be log in first")
+        setLogin(false)
+    }
     if (response.ok){
         let jsonData = await response.json()
         setPresent(jsonData)

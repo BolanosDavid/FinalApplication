@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 let FriendsComponents = (props) => {
-    let {createNotificacion} = props
+    let {createNotificacion,setLogin} = props
     let [message, setMessage] = useState("");
     let [friends, setFriends] = useState([]); 
     let navigate  = useNavigate()
@@ -15,6 +15,7 @@ let FriendsComponents = (props) => {
         let response = await fetch(backendURL + "/friends?apiKey=" + localStorage.getItem("apiKey"));
         if(response.status === 401){
             navigate("/login")
+            setLogin(false)
             createNotificacion("You need to be loged in")
             return
         }
@@ -48,7 +49,7 @@ let FriendsComponents = (props) => {
             <div>
                 {friends.map(friend => (
                     <div className="item"> 
-                        <Link to={`/friends/${friend.emailFriend}/presents`}>{friend.emailFriend}</Link>
+                        <p>{friend.emailFriend}</p>
                         <button onClick={() => onClickDelete(friend.emailFriend)}> Delete</button>
                     </div>
                 ))}

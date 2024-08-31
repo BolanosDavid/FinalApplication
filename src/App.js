@@ -11,6 +11,7 @@ import { backendURL } from './Globals';
 import FriendsComponents from './Components/FriendsComponent';
 import FriendsPresentsComponent from './Components/FriendsPresentsComponent';
 import AddFriendsComponent from './Components/AddFriendsComponent';
+import AccesToFriendsPresentsComponent from './Components/AccesToFriendsPresentsComponent';
 function App() {
   let [notificacion,setNotificacion] = useState("")
   let [login,setLogin] = useState(false)
@@ -48,6 +49,7 @@ let disconnect =async  () => {
             {login && <li><Link to= "/createPresents"> Create present</Link></li>}
             {login && <li><Link to= "/friends"> Friends</Link></li>}
             {login && <li><Link to= "/addFriends"> Add friends</Link></li>}
+            {login && <li><Link to= "/searchFriendPresents"> Search friends presents</Link></li>}
           </ul>
         </nav>
 
@@ -66,28 +68,29 @@ let disconnect =async  () => {
       <Route path='/register' element={
           <CreateUserComponent createNotificacion={createNotificacion}   />
         }    />
-
-
       <Route path='/login' element={
           <LoginUserComponent createNotificacion={createNotificacion} setLogin={setLogin}/>
         }    />
       <Route path='/presents' element={
-          <PresentUserComponent createNotificacion={createNotificacion}/>
+          <PresentUserComponent createNotificacion={createNotificacion} setLogin={setLogin}/>
         }    />
       <Route path='/createPresents' element={
-          <CreatePresentComponent createNotificacion={createNotificacion} />
+          <CreatePresentComponent createNotificacion={createNotificacion} setLogin={setLogin}/>
         }/>
         <Route path='/friends' element={
-          <FriendsComponents createNotificacion={createNotificacion} />
+          <FriendsComponents createNotificacion={createNotificacion}setLogin={setLogin} />
         }/>
         <Route path='/addFriends' element={
-          <AddFriendsComponent createNotificacion={createNotificacion} />
+          <AddFriendsComponent createNotificacion={createNotificacion}setLogin={setLogin} />
         }/>
       <Route path='/edit/:presentId' element={
-          <EditPresentComponent createNotificacion={createNotificacion} />
+          <EditPresentComponent createNotificacion={createNotificacion} setLogin={setLogin}/>
         }/>  
+        <Route path='/searchFriendPresents' element={
+          <AccesToFriendsPresentsComponent createNotificacion={createNotificacion} setLogin={setLogin}  />
+        }/>
       <Route path='/friends/:emailFriend/presents' element={
-          <FriendsPresentsComponent createNotificacion={createNotificacion} />
+          <FriendsPresentsComponent createNotificacion={createNotificacion} setLogin={setLogin} />
         }/>
       
         

@@ -2,7 +2,7 @@ import {useEffect, useState } from 'react';
     import { backendURL } from '../Globals';
 import { useNavigate } from 'react-router-dom';
 let CreateUserComponent = (props) => {
-        let {createNotificacion} = props
+        let {createNotificacion,setLogin} = props
         let [ item,setItem] = useState({});
         let [ message, setMessage ] = useState("");
         let [error,setError] = useState({})
@@ -14,6 +14,7 @@ let CreateUserComponent = (props) => {
         let checkLogin = async () => {
             let response = await fetch(backendURL + "/presents?apiKey=" + localStorage.getItem("apiKey"))
             if (response.status === 401){
+                setLogin(false)
                 createNotificacion("You need to be loged in ")
                 navigate("/login")
                 return 
